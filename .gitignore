@@ -1,7 +1,8 @@
-*PRIVADO*
-segredo*
-*.key
 work/
+src/
+vendor/
+*segredo*
+*.key
 *.dwg
 *.pdf
 *.glb
