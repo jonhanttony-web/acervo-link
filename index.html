@@ -22,7 +22,7 @@ try{
  try{clear=await crypto.subtle.decrypt({name:'AES-GCM',iv,additionalData:aad,tagLength:128},key,sealed);}catch{throw Error('Este link não abre esta versão do acervo. Confira o endereço completo ou peça um novo link ao responsável.');}
  let documentBlob=new Blob([clear],{type:'text/html;charset=utf-8'});
  if(envelope.compression==='gzip'){if(typeof DecompressionStream==='undefined')throw Error('Atualize o navegador para abrir esta versão do acervo.');state.textContent='Preparando as pastas dos projetos…';documentBlob=await new Response(documentBlob.stream().pipeThrough(new DecompressionStream('gzip'))).blob();}
- objectURL=URL.createObjectURL(documentBlob);
+ objectURL=URL.createObjectURL(new Blob([documentBlob],{type:'text/html;charset=utf-8'}));
  clear=null;sealed.fill(0);$('sealed').remove();
  frame.onload=()=>{$('gate').hidden=true;frame.hidden=false;};frame.src=objectURL;
  window.addEventListener('pagehide',()=>{if(objectURL)URL.revokeObjectURL(objectURL);},{once:true});
