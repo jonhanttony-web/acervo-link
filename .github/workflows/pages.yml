@@ -30,7 +30,7 @@ jobs:
           if [ -d alfa ]; then cp -R alfa _site/; fi
           cp LICENCA_*.txt _site/
           node -e "const fs=require('fs'); for(const n of ['index.html','app.js','app.css','sw.js','viewer.html','viewer.js','pdfworker.js','manifest.webmanifest','logo.png','icon-192.png','icon-512.png']) if(!fs.existsSync('_site/'+n)) throw Error('Arquivo essencial ausente: '+n); const r=JSON.parse(fs.readFileSync('_site/release-v2.json')); JSON.parse(fs.readFileSync('_site/manifest.webmanifest')); if(!fs.existsSync('_site/'+r.catalog.file)) throw Error('Catalogo ausente');"
-          node -e "const fs=require('fs'); if(fs.existsSync('_site/alfa')){const r=JSON.parse(fs.readFileSync('_site/alfa/release.json'));for(const n of ['index.html','app.js','app.css','admin.html','admin.js','admin.css','sw.js','manifest.webmanifest',r.catalog.file])if(!fs.existsSync('_site/alfa/'+n))throw Error('Arquivo alfa ausente: '+n);if(r.version!=='0.0.1-alpha.8')throw Error('Versao alfa inesperada');}"
+          node -e "const fs=require('fs'); if(fs.existsSync('_site/alfa')){const r=JSON.parse(fs.readFileSync('_site/alfa/release.json'));for(const n of ['index.html','app.js','app.css','admin.html','admin.js','admin.css','sw.js','manifest.webmanifest',r.catalog.file])if(!fs.existsSync('_site/alfa/'+n))throw Error('Arquivo alfa ausente: '+n);if(r.version!=='0.0.1-alpha.9')throw Error('Versao alfa inesperada');}"
       - name: Configurar Pages
         uses: actions/configure-pages@v5
       - name: Preparar publicacao
