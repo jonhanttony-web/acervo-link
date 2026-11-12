@@ -18,3 +18,16 @@ body.project-view{background:#A7BEB6}#back{display:inline-flex;align-items:cente
 /* Keep the application layout fixed; viewers retain their own pointer zoom. */
 html,body{touch-action:pan-x pan-y}
 @media(pointer:coarse){input,select,textarea,#access-link{font-size:16px}}
+/* The first frame is a non-interactive branded startup screen. */
+body.startup-pending{overflow:hidden;background:#132d3e}
+#app-content[inert]{visibility:hidden}
+.startup{position:fixed;inset:0;z-index:10000;min-height:100dvh;background:#132d3e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:calc(32px + env(safe-area-inset-top)) 28px calc(32px + env(safe-area-inset-bottom));text-align:center;overflow:auto}
+.startup-brand img{display:block;width:min(254px,65vw);height:auto;background:#fff;border-radius:12px;padding:12px;margin:0 auto 24px}
+.startup-brand h1{font-size:34px;margin:0 0 7px;letter-spacing:-.02em}
+.startup .startup-subtitle{font-size:11px;letter-spacing:.17em;color:#b7d9e3;margin:0}
+.startup-status{display:flex;flex-direction:column;align-items:center;gap:15px;max-width:340px}
+.startup-status p{color:#e4eef2;font-size:16px;margin:0}
+.startup-spinner{width:30px;height:30px;border:3px solid #ffffff30;border-top-color:#6ad9dd;border-radius:50%;animation:startup-spin .9s linear infinite}
+#startup-retry{background:#fff;color:#132d3e;min-height:48px;padding:12px 24px;font-weight:650}
+@keyframes startup-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.startup-spinner{animation:none;border-color:#6ad9dd}}
