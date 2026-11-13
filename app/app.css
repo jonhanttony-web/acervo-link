@@ -35,3 +35,5 @@ body.startup-pending{overflow:hidden;background:#132d3e}
 .card-code,#project-code{display:inline-block;max-width:100%;padding:9px 13px;border-radius:8px;background:var(--navy);color:#fff;font-size:22px;font-weight:750;line-height:1.15;letter-spacing:.025em;font-variant-numeric:tabular-nums;white-space:nowrap;text-transform:none;margin:0 0 4px}
 .project-heading>div{min-width:0}
 @media(max-width:420px){.project-heading{flex-wrap:wrap}#project-code{font-size:22px}}
+
+#request-form{display:flex;flex-direction:column;gap:10px}#request-form label{font-weight:650}#request-form input{width:100%;min-height:48px;font-size:16px}#request-error{color:#a51f2b;margin:0}#request-form .actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
