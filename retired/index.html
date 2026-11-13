@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>Acesso desativado</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#132f3e;color:#fff;font:18px/1.5 system-ui,sans-serif}main{max-width:480px;padding:32px}h1{font-size:28px}p{color:#d4e2e8}</style></head><body><main><h1>Este acesso foi desativado.</h1><p>Solicite ao responsável o acesso ao aplicativo atual.</p></main><script>
+history.replaceState(null,'',location.pathname);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
+</script></body></html>

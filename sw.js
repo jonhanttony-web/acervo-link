@@ -1,9 +1,18 @@
-const BUILD="2aab5953e0eaedd7",SHELL='ecovix-acervo-shell-'+BUILD,OBJECTS='ecovix-acervo-objects-v2',CORE=["./","index.html","release.json","release-v2.json","app.js","app.css","viewer.html","viewer.js","pdfworker.js","manifest.webmanifest","logo.png","icon-192.png","icon-512.png","fonts/FoxitDingbats.pfb","fonts/FoxitFixed.pfb","fonts/FoxitFixedBold.pfb","fonts/FoxitFixedBoldItalic.pfb","fonts/FoxitFixedItalic.pfb","fonts/FoxitSerif.pfb","fonts/FoxitSerifBold.pfb","fonts/FoxitSerifBoldItalic.pfb","fonts/FoxitSerifItalic.pfb","fonts/FoxitSymbol.pfb","fonts/LiberationSans-Bold.ttf","fonts/LiberationSans-BoldItalic.ttf","fonts/LiberationSans-Italic.ttf","fonts/LiberationSans-Regular.ttf"];
-self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(SHELL);await cache.addAll(CORE.map(url=>new Request(new URL(url,self.registration.scope),{cache:'reload'})))})()));
-self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('ecovix-acervo-shell-')&&name!==SHELL)await caches.delete(name);await self.clients.claim()})()));
-self.addEventListener('message',event=>{if(event.data?.type==='ACTIVATE_UPDATE')self.skipWaiting()});
-self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url),scope=new URL(self.registration.scope);if(request.method!=='GET'||url.origin!==scope.origin||!url.pathname.startsWith(scope.pathname))return;const relative=url.pathname.slice(scope.pathname.length);
- if(['release.json','release-v2.json'].includes(relative)){event.respondWith((async()=>{const cache=await caches.open(SHELL);try{const response=await fetch(request,{cache:'no-cache'});if(response.ok){await cache.put(relative,response.clone());return response}throw Error('offline')}catch{const saved=await cache.match(relative);return saved||Response.error()}})());return}
- if(relative.startsWith('data/')&&relative.endsWith('.enc')){event.respondWith((async()=>{const cache=await caches.open(OBJECTS),saved=await cache.match(new Request(url.origin+url.pathname));return saved||fetch(request)})());return}
- event.respondWith((async()=>{const cache=await caches.open(SHELL);const saved=await cache.match(new Request(url.origin+url.pathname));if(saved)return saved;if(request.mode==='navigate'&&relative==='')return(await cache.match('index.html'))||fetch(request);return fetch(request)})());
+'use strict';
+const OFFLINE='<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acesso desativado</title><body><h1>Este acesso foi desativado.</h1><p>Solicite ao responsável o acesso ao aplicativo atual.</p></body></html>';
+function oldPath(url){const scope=new URL(self.registration.scope),relative=url.pathname.slice(scope.pathname.length);return url.origin===scope.origin&&url.pathname.startsWith(scope.pathname)&&!['app','alfa'].some(p=>relative===p||relative.startsWith(p+'/'))}
+self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
+self.addEventListener('activate',e=>e.waitUntil((async()=>{
+ for(const name of await caches.keys())if(name.startsWith('ecovix-acervo-shell-')||name==='ecovix-acervo-objects-v2')await caches.delete(name);
+ // Apenas o banco legado. Bases acervo-prod e acervo-alpha permanecem intactas.
+ indexedDB.deleteDatabase('ecovix-acervo-local');
+ await self.clients.claim();
+ for(const c of await self.clients.matchAll({type:'window'}))if(oldPath(new URL(c.url)))await c.navigate(self.registration.scope).catch(()=>{});
+})()));
+self.addEventListener('fetch',e=>{
+ if(e.request.method!=='GET'||!oldPath(new URL(e.request.url)))return;
+ if(e.request.mode==='navigate'){e.respondWith(fetch(new URL('index.html',self.registration.scope),{cache:'no-store'}).catch(()=>new Response(OFFLINE,{headers:{'Content-Type':'text/html;charset=utf-8'}})));return}
+ const relative=new URL(e.request.url).pathname.slice(new URL(self.registration.scope).pathname.length);
+ if(relative==='sw.js')return;
+ e.respondWith(new Response('Acesso desativado',{status:410,headers:{'Cache-Control':'no-store','Content-Type':'text/plain;charset=utf-8'}}));
 });
